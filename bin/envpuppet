@@ -1,0 +1,45 @@
+#! /bin/bash
+#
+# 2010-07-13 Jeff McCune <jeff@puppetlabs.com>
+#
+# This script configures RUBYLIB and PATH
+# to use the version of puppet you have checked out
+# somewhere.
+#
+# Change base= to the directory you clone puppet,facter, etc
+# into.
+#
+# cd ~/src
+# git clone http://github.com/reductivelabs/facter.git
+# git clone http://github.com/reductivelabs/puppet.git
+
+set -e
+
+# Set this to where you check out puppet and facter
+base="${HOME}/src"
+
+# git://github.com/reductivelabs/puppet.git
+mypath="${base}/puppet/sbin:${base}/puppet/bin"
+myrubylib="${base}/puppet/lib"
+
+# git://github.com/reductivelabs/facter.git
+mypath="${mypath}:${base}/facter/bin"
+myrubylib="${myrubylib}:${base}/facter/lib"
+
+# http://github.com/jamtur01/puppet-scaffold.git
+mypath="${mypath}:${base}/puppet-scaffold/bin"
+myrubylib="${myrubylib}:${base}/puppet-scaffold/lib"
+
+# http://github.com/puppetlabs/puppet-module-tool.git
+# Also known as "pmt"  Will become "puppet module"
+mypath="${mypath}:${base}/puppet-module-tool/bin"
+myrubylib="${myrubylib}:${base}/puppet-module-tool/lib"
+
+# Existing environment
+mypath="${mypath}:${PATH}"
+myrubylib="${myrubylib}:${RUBYLIB}"
+
+export PATH="${mypath}"
+export RUBYLIB="${myrubylib%%:}"
+
+exec $@
